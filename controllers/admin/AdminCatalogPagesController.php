@@ -159,12 +159,36 @@ class AdminCatalogPagesController extends ModuleAdminController
                 array(
                     'type' => 'html',
                     'name' => 'tokens',
+                    'html_content' => $this->getCategoryTokens(),
+                ),
+                array(
+                    'type' => 'textarea',
+                    'label' => $this->l('Template header'),
+                    'name' => 'template_header',
+                    'rows' => 25,
+                    'hint' => $this->l('Forbidden characters:') . ' <>;=#{}'
+                ),
+                array(
+                    'type' => 'html',
+                    'name' => 'tokens',
                     'html_content' => $this->getProductTokens(),
                 ),
                 array(
                     'type' => 'textarea',
                     'label' => $this->l('Template'),
-                    'name' => 'template',
+                    'name' => 'template_content',
+                    'rows' => 25,
+                    'hint' => $this->l('Forbidden characters:') . ' <>;=#{}'
+                ),
+                array(
+                    'type' => 'html',
+                    'name' => 'tokens',
+                    'html_content' => $this->getCategoryTokens(),
+                ),
+                array(
+                    'type' => 'textarea',
+                    'label' => $this->l('Template footer'),
+                    'name' => 'template_footer',
                     'rows' => 25,
                     'hint' => $this->l('Forbidden characters:') . ' <>;=#{}'
                 ),
@@ -213,6 +237,19 @@ class AdminCatalogPagesController extends ModuleAdminController
     public function getProductTokens()
     {
         $product_tokens = HelperToken::getTokens();
+        $html = '<div class="tokens">';
+        foreach($product_tokens as $token)
+        {
+            $html .= '<span class="' . $token . '"> {' . $token . '} </span>';
+        }
+        $html .= '</div>';
+
+        return $html;
+    }
+
+    public function getCategoryTokens()
+    {
+        $product_tokens = HelperToken::getTokens('Category');
         $html = '<div class="tokens">';
         foreach($product_tokens as $token)
         {

@@ -48,7 +48,9 @@ class Install
                 `active` BOOL DEFAULT 1,
                 `id_category` INT(11) NOT NULL,
                 `style` TEXT(50000),
-                `template` TEXT(50000)
+                `template_header` TEXT(50000),
+                `template_content` TEXT(50000),
+                `template_footer` TEXT(50000)
             ) ENGINE=' . _MYSQL_ENGINE_ . ' CHARACTER SET=UTF8;
 
             CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'catalog_page_lang` (

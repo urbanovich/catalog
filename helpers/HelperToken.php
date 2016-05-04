@@ -33,18 +33,15 @@ class HelperToken
     {
         static $properties;
 
-        if(!empty($properties))
-            return $properties;
+        if(!empty($properties[$object]))
+            return $properties[$object];
 
         $product = new $object();
-        $properties = array();
         foreach($product as $property => $value)
         {
-            $properties[] = $property;
+            $properties[$object][] = $property;
         }
 
-        file_put_contents(_PS_ROOT_DIR_ . '/log.txt', print_r($properties, true) . "\n\nfile: " . __FILE__ . "\n\nline: " . __LINE__ . "\n\ndate: " . date('d-m-Y H:i:s', time()));
-
-        return $properties;
+        return $properties[$object];
     }
 }

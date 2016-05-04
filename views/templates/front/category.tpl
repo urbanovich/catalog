@@ -2,5 +2,7 @@
     {$style}
 </style>
 <div class="catalog_page-{$id_catalog_page}">
-    {$fetch}
+    {$template_header}
+    {$template_content}
+    {$template_footer}
 </div>

@@ -52,7 +52,11 @@ class CatalogPage extends ObjectModel
 
     public $style;
 
-    public $template;
+    public $template_header;
+
+    public $template_content;
+
+    public $template_footer;
 
     public static $definition = array(
         'table' => 'catalog_page',
@@ -65,7 +69,9 @@ class CatalogPage extends ObjectModel
             'id_category' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'active' =>             array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'style' =>              array('type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 50000),
-            'template' =>           array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 50000),
+            'template_header' =>    array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 50000),
+            'template_content' =>   array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 50000),
+            'template_footer' =>    array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 50000),
 
             //lang fields
             'title' =>              array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isString', 'size' => 255),

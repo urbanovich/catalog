@@ -39,15 +39,18 @@ class catalogCategoryModuleFrontController extends ModuleFrontController
     public function initContent()
     {
         global $smarty;
+        $header = clone $smarty;
+        $content = clone $smarty;
+        $footer = clone $smarty;
+
         parent::initContent();
 
         $id_lang = $this->context->language->id;
         $id_shop = $this->context->shop->id;
-//        $smarty = $this->context->smarty;
+
         $catalog_page = new CatalogPage(Tools::getValue('id_catalog_page'), $id_lang, $id_shop);
         $category = new Category(Tools::getValue('id_category'), $id_lang, $id_shop);
 
-        $products = array();
         $products = $category->getProducts($id_lang, $this->p, $this->n);
         foreach($category->getChildren(Tools::getValue('id_category'), $id_lang, true, $id_shop) as $children)
         {
@@ -55,20 +58,33 @@ class catalogCategoryModuleFrontController extends ModuleFrontController
             $products = array_merge($c->getProducts($id_lang, $this->p, $this->n), $products);
         }
 
+        $category_tokens = HelperToken::getTokens('Category');
+        foreach($category_tokens as $token)
+        {
+            $search_tokens[] = '{' . $token . '}';
+            $replace_tokens[] = '{$' . $token . '}';
+        }
+        $template_header = str_replace($search_tokens, $replace_tokens, $catalog_page->template_header);
+        $template_footer = str_replace($search_tokens, $replace_tokens, $catalog_page->template_footer);
+        unset($search_tokens, $replace_tokens);
+
+        $header->assign((array)$category);
+        $footer->assign((array)$category);
+
         $product_tokens = HelperToken::getTokens();
-        $tokens = array();
         foreach($product_tokens as $token)
         {
             $search_tokens[] = '{' . $token . '}';
             $replace_tokens[] = '{$item.' . $token . '}';
         }
-        $template = str_replace($search_tokens, $replace_tokens, $catalog_page->template);
+        $template_content = str_replace($search_tokens, $replace_tokens, $catalog_page->template_content);
+        unset($search_tokens, $replace_tokens);
 
-        $template = '{foreach $items as $item}'
-                        . $template
-                    . '{/foreach}';
+        $template_content = '{foreach $items as $item}'
+                                . $template_content
+                            . '{/foreach}';
 
-        $smarty->assign(
+        $content->assign(
             array(
                 'items' => $products,
             )
@@ -78,7 +94,9 @@ class catalogCategoryModuleFrontController extends ModuleFrontController
             array(
                 'id_catalog_page' => $catalog_page->id_catalog_page,
                 'style' => $catalog_page->style,
-                'fetch' => $smarty->fetch('string:' . $template),
+                'template_header' => $header->fetch('string:' . $template_header),
+                'template_content' => $content->fetch('string:' . $template_content),
+                'template_footer' => $footer->fetch('string:' . $template_footer),
             )
         );
 
